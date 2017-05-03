@@ -1,0 +1,56 @@
+command /unseen [<text>] [<text>] [<text>] [<text>] [<text>]:
+	trigger:
+		if arg 1 is not set:
+			message "&8&m-----&8[&4UnseenMC&8]&8&m-----"
+			message "&8/unseen setcrates"
+			message "&8/unseen delcrates"
+			message "&8/unseen combattag"
+			message "&8&m-----&8[&4UnseenMC&8]&8&m-----"
+			stop
+		if arg 1 is "setcrates":
+			if {UnseenMC::feature::crates::location} is not set:
+				if targeted block is a chest:
+					set {UnseenMC::feature::crates::location} to location of targeted block
+					message "&4You &8have set the &ccrate &8at &4%location of targeted block%&8"
+					stop
+				else:
+					message "&4You &8can't set the &4crate &8as a &4%targeted block%&8!"
+					stop
+			else:
+				message "&8[&4UnseenMC&8] &4ERROR: &8the &4crate &8is already set at &4%{UnseenMC::feature::crates::location}%&8!"
+				stop
+		if arg 1 is "delcrates":
+			if {UnseenMC::feature::crates::location} is set:
+				message "&8[&4UnseenMC&8] &8Are you sure you really want to delete Crate?"
+				message "&8[&4UnseenMC&8] &8 Verify it by typing ""yes"" in chats"
+				set {UnseenMC::feature::crates::delete::verify} to "yes"
+				set {_seconds} to 5
+				loop 5 times:
+					message "&8[&4UnseenMC&8] &8You only have %{_seconds}% seconds left!"
+					remove 1 from {_seconds}
+					wait 1 second
+				if {UnseenMC::feature::crates::deleted} is set:
+					delete {UnseenMC::feature::crates::delete::verify}
+					delete {UnseenMC::feature::crates::deleted}
+					message "&8[&4UnseenMC&8] Crate at location %{UnseenMC::feature::crates::location}% is deleted"
+					delete {UnseenMC::feature::crates::location}
+					stop
+			else:
+				message "&8[&4UnseenMC&8] &4ERROR: &8the &4crate &8is not set"
+				stop
+
+on chat:
+	if message contains "yes":
+		if {UnseenMC::feature::crates::delete::verify} is "yes":
+			cancel event
+			set {UnseenMC::feature::crates::deleted} to true
+			message "&8[&4UnseenMC&8] Crate deletion confirmed."
+			stop
+		else:
+			stop
+
+command /cc:
+	trigger:
+		loop 250 times:
+			broadcast ""
+
