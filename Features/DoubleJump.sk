@@ -4,11 +4,6 @@ on jump:
 			if {UnseenMC::features::%uuid of player%::DoubleJump} is set:
 				if block below player is not air or water:
 					set player's flight state to true
-			else:
-				stop
-	else:
-		stop
-
 on flight toggle:
 	if player's world is "Lobby":
 		if {UnseenMC::features::%uuid of player%::DoubleJump} is set:
@@ -18,17 +13,19 @@ on flight toggle:
 				set player's flight state to false
 				push player upward at speed 0.3
 				push player forward at speed 0.9
-		else:
-			stop
-	else:
-		stop
-
-command /doublejump:
+command /doublejump [<text>]:
 	trigger:
-		if {UnseenMC::features::%uuid of player%::DoubleJump} is set:
-			delete {UnseenMC::features::%uuid of player%::DoubleJump}
-			set player's flight state to false
-			message "&8[&4DoubleJump&8] &8You have disabled Double Jump!"
+		if arg 1 is not set:
+			if {UnseenMC::features::%uuid of player%::DoubleJump} is set:
+				delete {UnseenMC::features::%uuid of player%::DoubleJump}
+				set player's flight state to false
+				message "&8[&4DoubleJump&8] &8You have disabled Double Jump!"
+			else:
+				set {UnseenMC::features::%uuid of player%::DoubleJump} to true
+				message "&8[&4DoubleJump&8] &8You have enabled Double Jump!"
 		else:
-			set {UnseenMC::features::%uuid of player%::DoubleJump} to true
-			message "&8[&4DoubleJump&8] &8You have enabled Double Jump!"
+			send "&8[&4CORE&8] &7Command not found."
+on join:
+	set {UnseenMC::features::%uuid of player%::DoubleJump} to true
+on quit:
+	set {UnseenMC::features::%uuid of player%::DoubleJump} to false
