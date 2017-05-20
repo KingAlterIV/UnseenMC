@@ -1,0 +1,34 @@
+on jump:
+	if player's world is "Lobby":
+		if player's gamemode is not creative:
+			if {UnseenMC::features::%uuid of player%::DoubleJump} is set:
+				if block below player is not air or water:
+					set player's flight state to true
+			else:
+				stop
+	else:
+		stop
+
+on flight toggle:
+	if player's world is "Lobby":
+		if {UnseenMC::features::%uuid of player%::DoubleJump} is set:
+			if player's gamemode is not creative:
+				cancel event
+				wait 0.1 tick
+				set player's flight state to false
+				push player upward at speed 0.3
+				push player forward at speed 0.9
+		else:
+			stop
+	else:
+		stop
+
+command /doublejump:
+	trigger:
+		if {UnseenMC::features::%uuid of player%::DoubleJump} is set:
+			delete {UnseenMC::features::%uuid of player%::DoubleJump}
+			set player's flight state to false
+			message "&8[&4DoubleJump&8] &8You have disabled Double Jump!"
+		else:
+			set {UnseenMC::features::%uuid of player%::DoubleJump} to true
+			message "&8[&4DoubleJump&8] &8You have enabled Double Jump!"
